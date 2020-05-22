@@ -1,3 +1,47 @@
+<form #flashForm="ngForm">
+  <h1 class="is-size-3">Add New Flash Card</h1>
+  <div class="field">
+    <label for="question">Question</label>
+    <div class="control">
+      <input
+        type="text"
+        id="question"
+        name="question"
+        required
+        class="input"
+        [(ngModel)]="flash.question"
+        #question="ngModel"
+        [ngClass]="{ 'is-danger': question.invalid && !question.pristine }"
+      />
+    </div>
+  </div>
+  <div class="field">
+    <label for="answer">Answer</label>
+    <div class="control">
+      <input
+        type="text"
+        id="answer"
+        name="answer"
+        required
+        class="input"
+        [(ngModel)]="flash.answer"
+        #answer="ngModel"
+        [ngClass]="{ 'is-danger': answer.invalid && !answer.pristine }"
+      />
+    </div>
+  </div>
+
+  <button
+    class="button is-primary"
+    type="submit"
+    (click)="handleSubmit()"
+    [disabled]="flashForm.status !== 'VALID'"
+  >
+    Submit
+  </button>
+  <button class="button clear-btn" (click)="handleClear()">Clear</button>
+</form>
+
 <div class="flashs">
   <app-flash
     *ngFor="let flash of flashs; trackBy: trackByFlashId"
