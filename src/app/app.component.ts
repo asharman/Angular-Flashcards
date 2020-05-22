@@ -34,4 +34,23 @@ export class AppComponent {
   trackByFlashId(index, flash) {
     return flash.id;
   }
+
+  handleToggleCard(id: number): void {
+    const flash = this.flashs.find((flash) => flash.id === id);
+    flash.show = !flash.show;
+  }
+
+  handleDelete(id: number): void {
+    const flashIndex = this.flashs.findIndex((flash) => flash.id === id);
+    this.flashs.splice(flashIndex, 1);
+  }
+
+  handleEdit(id: number): void {
+    console.log(id);
+  }
+
+  handleRememberedChange({ id, flag }): void {
+    const flash = this.flashs.find((flash) => flash.id === id);
+    flash.remembered = flag;
+  }
 }
