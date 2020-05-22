@@ -32,14 +32,34 @@
   </div>
 
   <button
+    *ngIf="editing; else submit"
     class="button is-primary"
     type="submit"
-    (click)="handleSubmit()"
-    [disabled]="flashForm.status !== 'VALID'"
+    (click)="handleUpdate()"
+    [disabled]="flashForm.invalid"
   >
-    Submit
+    Update
   </button>
-  <button class="button clear-btn" (click)="handleClear()">Clear</button>
+  <ng-template #submit>
+    <button
+      class="button is-primary"
+      type="submit"
+      (click)="handleSubmit()"
+      [disabled]="flashForm.invalid"
+    >
+      Submit
+    </button>
+  </ng-template>
+  <button
+    *ngIf="editing; else clear"
+    class="button clear-btn"
+    (click)="handleCancel()"
+  >
+    Cancel
+  </button>
+  <ng-template #clear>
+    <button class="button clear-btn" (click)="handleClear()">Clear</button>
+  </ng-template>
 </form>
 
 <div class="flashs">

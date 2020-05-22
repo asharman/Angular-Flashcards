@@ -12,6 +12,8 @@ export class AppComponent {
   @ViewChild('flashForm', { static: true }) flashForm: NgForm;
   title = 'flashcards';
 
+  editing: boolean = false;
+  editingId: number;
   currentIndex = 0;
 
   flash: IFlash = {
@@ -57,7 +59,24 @@ export class AppComponent {
   }
 
   handleEdit(id: number): void {
-    console.log(id);
+    this.editing = true;
+    this.editingId = id;
+    const flash = this.flashs.find((flash) => flash.id === id);
+    this.flash.question = flash.question;
+    this.flash.answer = flash.answer;
+  }
+
+  handleUpdate(): void {
+    const flash = this.flashs.find((flash) => flash.id === this.editingId);
+    flash.question = this.flash.question;
+    flash.answer = this.flash.answer;
+    this.handleCancel();
+  }
+
+  handleCancel(): void {
+    this.editing = false;
+    this.editingId = undefined;
+    this.handleClear();
   }
 
   handleRememberedChange({ id, flag }): void {
@@ -67,7 +86,7 @@ export class AppComponent {
 
   handleSubmit(): void {
     this.flashs.push({
-      id: this.currentIndex++,
+      id: this.flash.id,
       ...this.flash,
     });
     this.handleClear();
@@ -77,7 +96,7 @@ export class AppComponent {
     this.flash = {
       question: '',
       answer: '',
-      id: this.flash.id,
+      id: this.currentIndex++,
       show: false,
     };
     this.flashForm.reset();
