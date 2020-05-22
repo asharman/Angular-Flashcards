@@ -1,8 +1,18 @@
 .card {
-  width: 300px;
-  margin: 10px;
-
   &-header {
     cursor: pointer;
+
+    &.correct {
+      background: #446f46;
+    }
+
+    &.incorrect {
+      background: #971212;
+    }
+
+    &.correct > *,
+    &.incorrect > * {
+      color: #fff;
+    }
   }
 }
