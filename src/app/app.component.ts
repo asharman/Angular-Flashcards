@@ -2,6 +2,7 @@ import { Component, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
 
 import { IFlash } from './flash.model';
+import { FlashService } from './flash.service';
 
 @Component({
   selector: 'app-root',
@@ -9,6 +10,10 @@ import { IFlash } from './flash.model';
   styleUrls: ['./app.component.scss'],
 })
 export class AppComponent {
+  constructor(private flashService: FlashService) {
+    this.flashs = this.flashService.flashs;
+  }
+
   @ViewChild('flashForm', { static: true }) flashForm: NgForm;
   title = 'flashcards';
 
@@ -23,53 +28,28 @@ export class AppComponent {
     show: false,
   };
 
-  flashs: IFlash[] = [
-    {
-      question: 'Question 1',
-      answer: 'Answer 1',
-      show: false,
-      id: this.currentIndex++,
-    },
-    {
-      question: 'Question 2',
-      answer: 'Answer 2',
-      show: false,
-      id: this.currentIndex++,
-    },
-    {
-      question: 'Question 3',
-      answer: 'Answer 3',
-      show: false,
-      id: this.currentIndex++,
-    },
-  ];
+  flashs: IFlash[];
 
   trackByFlashId(index, flash) {
     return flash.id;
   }
 
   handleToggleCard(id: number): void {
-    const flash = this.flashs.find((flash) => flash.id === id);
-    flash.show = !flash.show;
+    this.flashService.toggleFlash(id);
   }
 
   handleDelete(id: number): void {
-    const flashIndex = this.flashs.findIndex((flash) => flash.id === id);
-    this.flashs.splice(flashIndex, 1);
+    this.flashService.deleteFlash(id);
   }
 
   handleEdit(id: number): void {
     this.editing = true;
     this.editingId = id;
-    const flash = this.flashs.find((flash) => flash.id === id);
-    this.flash.question = flash.question;
-    this.flash.answer = flash.answer;
+    this.flash = this.flashService.getFlash(id);
   }
 
   handleUpdate(): void {
-    const flash = this.flashs.find((flash) => flash.id === this.editingId);
-    flash.question = this.flash.question;
-    flash.answer = this.flash.answer;
+    this.flashService.updateFlash(this.editingId, this.flash);
     this.handleCancel();
   }
 
@@ -80,15 +60,11 @@ export class AppComponent {
   }
 
   handleRememberedChange({ id, flag }): void {
-    const flash = this.flashs.find((flash) => flash.id === id);
-    flash.remembered = flag;
+    this.flashService.rememberedChanged(id, flag);
   }
 
   handleSubmit(): void {
-    this.flashs.push({
-      id: this.flash.id,
-      ...this.flash,
-    });
+    this.flashService.addFlash(this.flash);
     this.handleClear();
   }
 
@@ -96,7 +72,7 @@ export class AppComponent {
     this.flash = {
       question: '',
       answer: '',
-      id: this.currentIndex++,
+      id: this.flashService.currentIndex++,
       show: false,
     };
     this.flashForm.reset();
