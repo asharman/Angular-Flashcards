@@ -1,8 +1,9 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, OnInit, OnDestroy } from '@angular/core';
 import { NgForm } from '@angular/forms';
 
 import { IFlash } from './flash.model';
 import { FlashService } from './flash.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -29,6 +30,19 @@ export class AppComponent {
   };
 
   flashs: IFlash[];
+  subscription: Subscription;
+
+  ngOnInit() {
+    this.subscription = this.flashService.flashs$.subscribe((flashs) => {
+      this.flashs = flashs;
+    });
+  }
+
+  ngOnDestroy() {
+    if (this.subscription) {
+      this.subscription.unsubscribe();
+    }
+  }
 
   trackByFlashId(index, flash) {
     return flash.id;
