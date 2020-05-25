@@ -1,19 +1,18 @@
-import { Component, ViewChild, OnInit, OnDestroy } from '@angular/core';
+import { Component, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { NgForm } from '@angular/forms';
 
 import { IFlash } from './flash.model';
 import { FlashService } from './flash.service';
-import { Subscription } from 'rxjs';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppComponent {
-  constructor(private flashService: FlashService) {
-    this.flashs = this.flashService.flashs;
-  }
+  constructor(private flashService: FlashService) {}
 
   @ViewChild('flashForm', { static: true }) flashForm: NgForm;
   title = 'flashcards';
@@ -29,19 +28,10 @@ export class AppComponent {
     show: false,
   };
 
-  flashs: IFlash[];
-  subscription: Subscription;
+  flashs$: Observable<IFlash[]>;
 
   ngOnInit() {
-    this.subscription = this.flashService.flashs$.subscribe((flashs) => {
-      this.flashs = flashs;
-    });
-  }
-
-  ngOnDestroy() {
-    if (this.subscription) {
-      this.subscription.unsubscribe();
-    }
+    this.flashs$ = this.flashService.flashs$;
   }
 
   trackByFlashId(index, flash) {
