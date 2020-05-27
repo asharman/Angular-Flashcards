@@ -76,8 +76,8 @@ export class FlashService {
     this.flashs$.next(this.flashs);
   }
 
-  addFlash(flash: IFlash): void {
-    this.flashs = [...this.flashs.slice(0), flash];
+  addFlash(...flash: IFlash[]): void {
+    this.flashs = [...this.flashs.slice(0), ...flash];
     this.flashs$.next(this.flashs);
   }
 

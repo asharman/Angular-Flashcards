@@ -3,6 +3,7 @@ import { NgForm } from '@angular/forms';
 
 import { IFlash } from './flash.model';
 import { FlashService } from './flash.service';
+import { FlashhttpService } from './flashhttp.service';
 import { Observable } from 'rxjs';
 
 @Component({
@@ -12,7 +13,10 @@ import { Observable } from 'rxjs';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppComponent {
-  constructor(private flashService: FlashService) {}
+  constructor(
+    private flashService: FlashService,
+    private flashhttpService: FlashhttpService
+  ) {}
 
   @ViewChild('flashForm', { static: true }) flashForm: NgForm;
   title = 'flashcards';
@@ -80,5 +84,9 @@ export class AppComponent {
       show: false,
     };
     this.flashForm.reset();
+  }
+
+  handleRequestQuestions(): void {
+    this.flashhttpService.getQuestions();
   }
 }

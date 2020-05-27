@@ -62,6 +62,10 @@
   </ng-template>
 </form>
 
+<button class="button is-primary" (click)="handleRequestQuestions()">
+  Request Questions
+</button>
+
 <div class="flashs">
   <app-flash
     *ngFor="let flash of flashs$ | async; trackBy: trackByFlashId"
