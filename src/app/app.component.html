@@ -1,5 +1,7 @@
 <form #flashForm="ngForm">
-  <h1 class="is-size-3">Add New Flash Card</h1>
+  <h1 class="is-size-3">
+    {{ editing ? "Edit Flash Card" : "Add New Flash Card" }}
+  </h1>
   <div class="field">
     <label for="question">Question</label>
     <div class="control">
